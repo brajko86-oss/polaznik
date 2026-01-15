@@ -2,13 +2,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
+import java.util.TreeSet;
 
 
 public class EvidencijaPolaznika {
     public static void main(String[] args) {
-        ArrayList<Polaznik> polaznici = new ArrayList<>();
+//        ArrayList<Polaznik> polaznici = new ArrayList<>();
+//        HashSet<Polaznik> polaznici = new HashSet<>();
+        TreeSet<Polaznik> polaznici = new TreeSet<>(
+                Comparator.comparing(Polaznik::getEmail, String.CASE_INSENSITIVE_ORDER));
+
         Scanner input = new Scanner(System.in);
 
         String ime = "";
@@ -31,7 +36,13 @@ public class EvidencijaPolaznika {
                     prezime = input.nextLine();
                     System.out.println("unesite email ispis polaznika");
                     email = input.nextLine();
-                    polaznici.add(new Polaznik(ime, prezime, email));
+                    Polaznik novi = new Polaznik(ime, prezime, email);
+
+                    if (polaznici.add(novi)) {
+                        System.out.println("Polaznik dodan.");
+                    } else {
+                        System.out.println("Polaznik s tim emailom već postoji!");
+                    }
 
                     System.out.println("unos sljedećeg polaznika (d)?");
                     if (input.nextLine().equalsIgnoreCase("d")) {
@@ -65,7 +76,7 @@ public class EvidencijaPolaznika {
         }
     }
 
-    public static void spremi(ArrayList<Polaznik> polaznici) {
+    public static void spremi(TreeSet<Polaznik> polaznici) {
         try (FileWriter fw = new FileWriter("polaznici.txt")) {
 
             for (Polaznik p : polaznici) {
@@ -81,7 +92,7 @@ public class EvidencijaPolaznika {
         }
     }
 
-    public static void ucitaj(ArrayList<Polaznik> polaznici) {
+    public static void ucitaj(TreeSet<Polaznik> polaznici) {
         File file = new File("polaznici.txt");
 
         if (!file.exists()) return;

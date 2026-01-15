@@ -1,4 +1,6 @@
-public class Polaznik {
+import java.util.Objects;
+
+public class Polaznik implements Comparable<Polaznik> {
     String ime;
     String prezime;
     String email;
@@ -34,10 +36,29 @@ public class Polaznik {
     }
 
     public String polaznici() {
-        return "Polaznik{" +
-                "ime='" + ime + '\'' +
-                ", prezime='" + prezime + '\'' +
-                ", s email adresom='" + email + '\'' +
-                '}';
+        return ime + " " + prezime + " (" + email + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Polaznik polaznik = (Polaznik) o;
+        return email.equalsIgnoreCase(polaznik.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return email.toLowerCase().hashCode();
+    }
+
+    public int compareTo(Polaznik p) {
+        int cmp = this.email.compareToIgnoreCase(p.email);
+        if (cmp != 0) return cmp;
+
+        cmp = this.prezime.compareToIgnoreCase(p.prezime);
+        if (cmp != 0) return cmp;
+
+        cmp = this.ime.compareToIgnoreCase(p.ime);
+        return cmp;
     }
 }
